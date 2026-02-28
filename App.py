@@ -12,7 +12,7 @@ def check_password():
             if st.session_state["password"] == st.secrets["APP_PASSWORD"]:
                 st.session_state["password_correct"] = True
             else: st.error("Wrong password")
-            st.title("🔏 USER AUTHENTICATION ")
+                
         st.text_input("Password", type="password", on_change=p_entered, key="password")
         return False
     return True
@@ -24,6 +24,7 @@ client = OpenAI(
     base_url="https://models.github.ai/inference", # Updated URL
     api_key=st.secrets["GITHUB_TOKEN"] 
 )
+model_name = "openai/gpt-5.3-codex" 
 
 # --- Sidebar & Files ---
 with st.sidebar:
