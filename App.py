@@ -1,5 +1,5 @@
 import streamlit as st
-from openai import AzureOpenAI
+from openai import OpenAI
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.neighbors import NearestNeighbors
 from PyPDF2 import PdfReader
