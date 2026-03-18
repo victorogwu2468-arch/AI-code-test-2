@@ -113,7 +113,7 @@ def retrieve_context(query):
         return None
 
     # Embed the query and retrieve similar chunks
-    queàry_vector = st.session_state.vectorizer.transform([query])
+    query_vector = st.session_state.vectorizer.transform([query])
     distances, indices = st.session_state.nbrs.kneighbors(query_vector)
     return "\n\n".join([st.session_state.knowledge_base[i] for i in indices[0]])
 
