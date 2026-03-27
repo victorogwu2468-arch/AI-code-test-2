@@ -73,7 +73,7 @@ def save_user_data_db(email, data):
 # NEW: Upload function for your secure bucket
 def upload_to_supabase(uploaded_file):
     def generate_and_save_image(prompt, size, quality):
-    try:
+        try:
         # Uses the same OpenAI client as your text chat
         response = client.images.generate(
             model="dall-e-3",
