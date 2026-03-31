@@ -39,6 +39,24 @@ section[data-testid="stSidebar"] { background: #020617; }
     border-radius: 14px;
     padding: 10px;
 }
+/* Premium Buttons */
+.stButton>button {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    border-radius: 14px;
+    border: none;
+    height: 3.8em;
+    font-weight: 600;
+    font-size: 1.1rem !important;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    transition: all 0.3s ease;
+}
+
+.stButton>button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -229,9 +247,32 @@ def detect_language(text):
 # --- 7. MAIN CHAT ---
 st.markdown("<h1 style='text-align: center;'>🚀 AI Assistant Pro</h1>", unsafe_allow_html=True)
 
+# --- Professional Quick-Start Interface ---
 if not st.session_state.current_session_id:
-    st.info("👈 Start a new project from the sidebar to begin.")
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    
+    # Using 5 columns centers the button perfectly on both Mobile and Desktop
+    col1, col2, col3, col4, col5 = st.columns([1, 1, 3, 1, 1])
+    
+    with col3:
+        st.markdown("<p style='text-align: center; color: #94a3b8;'>Ready to begin?</p>", unsafe_allow_html=True)
+        if st.button("✨ Start New Project", use_container_width=True):
+            # Create unique session ID
+            new_id = str(len(st.session_state.user_data["sessions"]) + 1)
+            st.session_state.current_session_id = new_id
+            st.session_state.messages = []
+            
+            st.session_state.user_data["sessions"][new_id] = {
+                "title": "New Chat",
+                "messages": []
+            }
+            
+            # Save and Refresh
+            save_user_data_db(user_email, st.session_state.user_data)
+            st.rerun()
+            
     st.stop()
+
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
