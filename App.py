@@ -56,6 +56,22 @@ section[data-testid="stSidebar"] { background: #020617; }
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
 }
+/* Force the sidebar toggle button to be visible and white on mobile */
+button[data-testid="sidebar-desktop-toggle"], 
+button[data-testid="sidebar-mobile-toggle"] {
+    background-color: rgba(99, 102, 241, 0.2) !important;
+    border-radius: 8px !important;
+    color: white !important;
+    left: 10px !important;
+    top: 10px !important;
+    z-index: 999999;
+}
+
+/* Ensure the sidebar header doesn't overlap the button */
+[data-testid="stSidebarNav"] {
+    padding-top: 2rem !important;
+}
+
 
 </style>
 """, unsafe_allow_html=True)
