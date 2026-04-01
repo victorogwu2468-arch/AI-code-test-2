@@ -19,60 +19,61 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- CSS STYLING ---
+# --- CSS STYLING (Standard Sidebar + OLED Black UI) ---
 st.markdown("""
 <style>
-#MainMenu {visibility: hidden;}
-footer {visibility: hidden;}
-header {visibility: hidden;}
-.stApp { background: linear-gradient(135deg, #0f172a, #020617); }
-section[data-testid="stSidebar"] { background: #020617; }
-.stButton>button {
-    background: linear-gradient(135deg, #6366F1, #8B5CF6);
-    color: white;
-    border-radius: 12px;
-    border: none;
-}
-[data-testid="stChatMessage"] {
-    background: #020617;
-    border: 1px solid #1e293b;
-    border-radius: 14px;
-    padding: 10px;
-}
-/* Premium Buttons */
-.stButton>button {
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    color: white;
-    border-radius: 14px;
-    border: none;
-    height: 3.8em;
-    font-weight: 600;
-    font-size: 1.1rem !important;
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-    transition: all 0.3s ease;
-}
+    /* 1. OLED Black Background for Main and Sidebar */
+    .stApp { background-color: #000000 !important; }
+    
+    /* Standard Sidebar (No custom floating buttons) */
+    section[data-testid="stSidebar"] { 
+        background-color: #000000 !important; 
+        border-right: 1px solid #27272a; 
+    }
 
-.stButton>button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
-}
-/* Force the sidebar toggle button to be visible and white on mobile */
-button[data-testid="sidebar-desktop-toggle"], 
-button[data-testid="sidebar-mobile-toggle"] {
-    background-color: rgba(99, 102, 241, 0.2) !important;
-    border-radius: 8px !important;
-    color: white !important;
-    left: 10px !important;
-    top: 10px !important;
-    z-index: 999999;
-}
+    /* 2. Hide standard Streamlit header/footer */
+    #MainMenu, footer, header {visibility: hidden;}
 
-/* Ensure the sidebar header doesn't overlap the button */
-[data-testid="stSidebarNav"] {
-    padding-top: 2rem !important;
-}
+    /* 3. Centered ChatGPT-Style Greeting */
+    .chat-title {
+        color: #FFFFFF;
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-top: 18vh;
+        margin-bottom: 2rem;
+        font-family: 'Inter', sans-serif;
+    }
 
+    /* 4. Pill-Shaped Action Buttons (Ovals) */
+    .stButton>button {
+        background-color: transparent !important;
+        color: #d1d5db !important;
+        border: 1px solid #3f3f46 !important;
+        border-radius: 50px !important; /* Forces the Oval shape */
+        padding: 0.6rem 1.2rem !important;
+        font-size: 0.95rem !important;
+        transition: all 0.2s ease;
+        height: auto !important;
+    }
+    
+    .stButton>button:hover {
+        border-color: #6366f1 !important;
+        background-color: #18181b !important;
+        color: white !important;
+    }
 
+    /* 5. Clean Chat Bubbles */
+    [data-testid="stChatMessage"] {
+        background: #000000;
+        border: 1px solid #27272a;
+        border-radius: 18px;
+    }
+
+    /* 6. Fix Sidebar Toggle Visibility on Black */
+    button[data-testid="sidebar-mobile-toggle"] {
+        color: white !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -261,7 +262,9 @@ def detect_language(text):
     except: return "en"
 
 # --- 7. MAIN CHAT ---
-st.markdown("<h1 style='text-align: center;'>🚀 AI Assistant Pro</h1>", unsafe_allow_html=True)
+if not st.session_state.get("current_session_id"):
+    # This line connects to the CSS .chat-title style I gave you
+    st.markdown('<p class="chat-title">What can I help with?</p>', unsafe_allow_html=True)
 
 # --- Professional Quick-Start Interface ---
 if not st.session_state.current_session_id:
