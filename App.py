@@ -332,7 +332,7 @@ if prompt := st.chat_input("Ask something..."):
             completion = client.chat.completions.create(
                 model=model_name, messages=full_messages, max_tokens=max_tokens, temperature=temperature
             )
-            response = completion.choices[0].message.content
+            response = chat.completion.choices[0].message.content
             st.markdown(response)
             st.session_state.messages.append({"role": "assistant", "content": response})
 
