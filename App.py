@@ -177,10 +177,9 @@ if "logged_in" not in st.session_state or not st.session_state.logged_in:
 # --- 4. CORE CLIENTS ---
 user_email = st.session_state.user.email
 client = OpenAI(
-    base_url="https://azure.com",
-    api_key=st.secrets["GITHUB_TOKEN"]
+    api_key=st.secrets["OPENAI_API_KEY"]
 )
-model_name = st.secrets.get("MODEL_NAME", "gpt-4-32k")
+model_name = st.secrets.get("MODEL_NAME", "gpt-4o-mini")
 
 @st.cache_resource
 def get_embed_model():
