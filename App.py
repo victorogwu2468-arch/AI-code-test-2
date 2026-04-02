@@ -70,10 +70,24 @@ st.markdown("""
         border-radius: 18px;
     }
 
-    /* 6. Fix Sidebar Toggle Visibility on Black */
-    button[data-testid="sidebar-mobile-toggle"] {
-        color: white !important;
-    }
+/* FORCE SIDEBAR WIDTH + VISIBILITY */
+section[data-testid="stSidebar"] {
+    min-width: 320px !important;
+    max-width: 320px !important;
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* Fix mobile toggle */
+button[data-testid="sidebar-mobile-toggle"] {
+    color: white !important;
+    z-index: 9999;
+}
+
+/* Ensure content doesn’t overlap */
+.main {
+    margin-left: 320px;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -328,12 +342,46 @@ if prompt := st.chat_input("Ask something..."):
                 full_messages.append({"role": "system", "content": f"Context:\n{context}"})
             full_messages += st.session_state.messages
 
-            completion = client.chat.completions.create(
-                model=model_name, messages=full_messages, max_tokens=max_tokens, temperature=temperature
-            )
-            response = completion.choices[0].message.content
-            st.markdown(response)
+            response_placeholder = st.empty()
+full_response = ""
+
+with st.spinner("🤖 Thinking..."):
+    try:
+        stream = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=full_messages,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            stream=True
+        )
+
+        for chunk in stream:
+            if chunk.choices[0].delta.content:
+                full_response += chunk.choices[0].delta.content
+                response_placeholder.markdown(full_response)
+
+    except Exception as e:
+        error_text = str(e)
+
+        if "RateLimit" in error_text or "quota" in error_text:
+            full_response = "⚠️ API Rate limit error. Try again shortly."
+        else:
+            full_response = "⚠️ Something went wrong. Please try again."
+
+        response_placeholder.markdown(full_response)
             st.session_state.messages.append({"role": "assistant", "content": response})
+        col1, col2 = st.columns(2)
+
+with col1:
+    if st.button("🔁 Retry"):
+        st.rerun()
+
+with col2:
+    if st.button("♻️ Regenerate"):
+        if len(st.session_state.messages) >= 2:
+            # Remove last assistant response
+            st.session_state.messages.pop()
+            st.rerun()
 
     # SAVE CHAT
     current_sess = st.session_state.user_data["sessions"][st.session_state.current_session_id]
